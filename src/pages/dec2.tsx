@@ -14,7 +14,7 @@ export default function Dec2() {
         SCISSORS: "C"
     }
 
-    let myGestureMapping = {
+    const myGestureMapping = {
         ROCK: "X",
         PAPER: "Y",
         SCISSORS: "Z"
