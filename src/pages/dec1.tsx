@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-
 import MainCard from '../components/MainCard';
+
 export default function Dec1() {
 
     const [input, setInput] = useState("");

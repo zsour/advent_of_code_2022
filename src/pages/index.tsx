@@ -8,6 +8,10 @@ export default function Home() {
               <Link href="/dec1">
                 <li>Dec 1. Calorie Counting.</li>
               </Link>
+
+              <Link href="/dec2">
+                <li>Day 2: Rock Paper Scissors.</li>
+              </Link>
             </ul>
         </MainCard>
   )
