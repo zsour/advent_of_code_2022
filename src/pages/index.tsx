@@ -6,7 +6,7 @@ export default function Home() {
         <MainCard title="Advent of Code 2022">
             <ul className='puzzle-list'>
               <Link href="/dec1">
-                <li>Dec 1. Calorie Counting.</li>
+                <li>Dec 1: Calorie Counting.</li>
               </Link>
 
               <Link href="/dec2">

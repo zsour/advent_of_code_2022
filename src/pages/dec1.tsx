@@ -52,7 +52,7 @@ export default function Dec1() {
     
 
     return (
-        <MainCard title="Dec 1. Calorie Counting.">
+        <MainCard title="Dec 1: Calorie Counting.">
 
             <div className="input-area">
                 <div className="input-header">
