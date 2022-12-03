@@ -12,6 +12,10 @@ export default function Home() {
               <Link href="/dec2">
                 <li>Day 2: Rock Paper Scissors.</li>
               </Link>
+
+              <Link href="/dec3">
+                <li>Day 3: Rucksack Reorganization.</li>
+              </Link>
             </ul>
         </MainCard>
   )
