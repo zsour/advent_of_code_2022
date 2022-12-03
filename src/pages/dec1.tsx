@@ -7,8 +7,10 @@ export default function Dec1() {
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
     const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
+    const [timer, setTimer] = useState("0 ms.");
 
     useEffect(() => {
+        let startTimer = performance.now();
         let tmp = input.split("\n");
         let chunks:string[][] =  [[]];
         let chunkIndex = 0;
@@ -48,6 +50,8 @@ export default function Dec1() {
         removeValueFromArray(secondElf);
         let thirdElf = Math.max(...reducedValues);
         setPuzzleResultTwo(firstElf+secondElf+thirdElf);
+        let endTimer = performance.now();
+        setTimer(`${(endTimer - startTimer).toFixed(1)} ms.`);
 
     }, [input]);
     
@@ -62,13 +66,17 @@ export default function Dec1() {
             <div className="result-area">
                 <div className="result">
                     <p className="result-text">
-                        Highest calorie count: {String(puzzleOneResult)}
+                        Highest calorie count: {String(puzzleOneResult)}.
                     </p>
                 </div>
 
                 <div className="result">
                     <p className="result-text">
-                        Top three calorie counts sum: {(puzzleTwoResult === Infinity || puzzleTwoResult === -Infinity) ? 0 : String(puzzleTwoResult)}
+                        Top three calorie counts sum: {(puzzleTwoResult === Infinity || puzzleTwoResult === -Infinity) ? 0 : String(puzzleTwoResult)}.
+                    </p>
+
+                    <p className="result-text">
+                        Performance messure: {timer}
                     </p>
                 </div>
             </div>

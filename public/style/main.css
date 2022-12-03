@@ -183,3 +183,29 @@ textarea {
     color: white;
     font-size: 22px;
 }
+
+.complexity-container{
+    width: 550px;
+    height: auto;
+    line-height: 40px;
+    text-align: center;
+    margin-top: 35px;
+}
+
+.complexity-text{
+    color: white;
+    font-size: 20px;
+    display: inline-block;
+    min-width: 250px;
+}
+
+.complexity-header{
+    text-align: center;
+    width: 550px;
+    height: 40px;
+}
+
+.complexity-text-header{
+    color: white;
+    font-size: 25px;
+}

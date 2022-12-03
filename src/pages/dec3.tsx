@@ -15,6 +15,7 @@ function Dec3(){
         return priorityList.indexOf(letter) + 1;
     }
 
+
     function binarySearch(arr: string[], value: string){
         let high = arr.length - 1;
         let low = 0;
@@ -50,6 +51,7 @@ function Dec3(){
         return 0;
     }
 
+
     function getGroupValue(backpackOne: string, backpackTwo: string, backpackThree: string){
         for(let i = 0; i < backpackOne.length; i++){
             if((binarySearch(backpackTwo.split(''), backpackOne[i]) !== -1) && (binarySearch(backpackThree.split(''), backpackOne[i]) !== -1)){
@@ -69,10 +71,11 @@ function Dec3(){
 
         function partOne(){
             let startTimer = performance.now();
+ 
             let firstPuzzleArr = tmp.map((backpack) => {            
                 return [backpack.slice(0, backpack.length/2), backpack.slice(backpack.length/2)];
             });
-    
+
             firstPuzzleArr = firstPuzzleArr.map((arr) => {
                 let compartmentOne = arr[0].split("").sort();
                 let compartmentTwo = arr[1].split("").sort();
@@ -108,7 +111,8 @@ function Dec3(){
                 }
             }
     
-    
+            
+         
             let totalSumPuzzleTwo = 0;
             for(let i = 0; i < secondPuzzleArr.length; i++){
                 totalSumPuzzleTwo += getGroupValue(secondPuzzleArr[i][0], secondPuzzleArr[i][1], secondPuzzleArr[i][2]);

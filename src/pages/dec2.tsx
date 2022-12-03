@@ -7,6 +7,7 @@ export default function Dec2() {
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
     const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
+    const [timer, setTimer] = useState("0 ms.");
 
     const elfGestureMapping = {
         ROCK: "A",
@@ -123,6 +124,7 @@ export default function Dec2() {
     
     useEffect(() => {
         if(input.length > 0){
+            let startTimer = performance.now();
             let tmp = input.split("\n");
             let totalScore = 0;
             let totalScorePartTwo = 0;
@@ -131,8 +133,10 @@ export default function Dec2() {
                 totalScorePartTwo += calculateScorePartTwo(tmp[i]);
             }
         
+            let endTimer = performance.now();
             setPuzzleOneResult(totalScore);
             setPuzzleResultTwo(totalScorePartTwo);
+            setTimer(`${(endTimer - startTimer).toFixed(1)} ms.`);
         }
     }, [input]);
     
@@ -148,13 +152,17 @@ export default function Dec2() {
             <div className="result-area">
                 <div className="result">
                     <p className="result-text">
-                        Round result (part 1): {String(puzzleOneResult)}
+                        Round result (part 1): {String(puzzleOneResult)}.
                     </p>
                 </div>
 
                 <div className="result">
                     <p className="result-text">
-                        Round result (part 2): {String(puzzleTwoResult)}
+                        Round result (part 2): {String(puzzleTwoResult)}.
+                    </p>
+
+                    <p className="result-text">
+                        Performance messure: {timer}
                     </p>
                 </div>
             </div>
