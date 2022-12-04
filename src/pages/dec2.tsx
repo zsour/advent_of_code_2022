@@ -6,7 +6,7 @@ export default function Dec2() {
 
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
-    const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
+    const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
     const [timer, setTimer] = useState("0 ms.");
 
     const elfGestureMapping = {
@@ -135,7 +135,7 @@ export default function Dec2() {
         
             let endTimer = performance.now();
             setPuzzleOneResult(totalScore);
-            setPuzzleResultTwo(totalScorePartTwo);
+            setPuzzleTwoResult(totalScorePartTwo);
             setTimer(`${(endTimer - startTimer).toFixed(1)} ms.`);
         }
     }, [input]);

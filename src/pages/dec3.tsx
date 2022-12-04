@@ -5,7 +5,7 @@ import InputArea from '../components/InputArea';
 function Dec3(){
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
-    const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
+    const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
     const [timerPuzzleOne, setTimerPuzzleOne] = useState("0 ms.");
     const [timerPuzzleTwo, setTimerPuzzleTwo] = useState("0 ms.");
 
@@ -122,7 +122,7 @@ function Dec3(){
             let endTimer = performance.now();
     
             setTimerPuzzleTwo(`${(endTimer - startTimer).toFixed(1)} ms.`);
-            setPuzzleResultTwo(totalSumPuzzleTwo);
+            setPuzzleTwoResult(totalSumPuzzleTwo);
         }
 
         partOne();

@@ -16,6 +16,10 @@ export default function Home() {
               <Link href="/dec3">
                 <li>Day 3: Rucksack Reorganization.</li>
               </Link>
+
+              <Link href="/dec4">
+                <li>Day 4: Camp Cleanup.</li>
+              </Link>
             </ul>
         </MainCard>
   )

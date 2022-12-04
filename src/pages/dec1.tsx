@@ -6,7 +6,7 @@ export default function Dec1() {
 
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
-    const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
+    const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
     const [timer, setTimer] = useState("0 ms.");
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function Dec1() {
         let secondElf = Math.max(...reducedValues);
         removeValueFromArray(secondElf);
         let thirdElf = Math.max(...reducedValues);
-        setPuzzleResultTwo(firstElf+secondElf+thirdElf);
+        setPuzzleTwoResult(firstElf+secondElf+thirdElf);
         let endTimer = performance.now();
         setTimer(`${(endTimer - startTimer).toFixed(1)} ms.`);
 
