@@ -12,6 +12,10 @@ export default function Dec1() {
     useEffect(() => {
         let startTimer = performance.now();
         let tmp = input.split("\n");
+        if(tmp[tmp.length - 1] === ''){
+            tmp.pop();
+        }
+        
         let chunks:string[][] =  [[]];
         let chunkIndex = 0;
         for(let i = 0; i < tmp.length; i++){

@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
 
-function Dec3(){
+function Dec4(){
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
     const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
@@ -15,44 +15,23 @@ function Dec3(){
     }
  
     function intervalWithin(intervalOneStart: number, intervalOneEnd: number, intervalTwoStart: number, intervalTwoEnd: number){
+        if(intervalOneStart === intervalOneEnd && intervalOneStart >= intervalTwoStart && intervalOneEnd <= intervalTwoEnd) return true;
 
-        if(intervalOneStart === intervalOneEnd && intervalOneStart >= intervalTwoStart && intervalOneEnd <= intervalTwoEnd){
-            return true;
-        }
+        if(intervalTwoStart === intervalTwoEnd && intervalTwoStart >= intervalOneStart && intervalTwoEnd <= intervalOneEnd) return true;
 
-        if(intervalTwoStart === intervalTwoEnd && intervalTwoStart >= intervalOneStart && intervalTwoEnd <= intervalOneEnd){
-            return true;
-        }
+        if(intervalOneStart < intervalOneEnd && intervalTwoStart >= intervalOneStart && intervalTwoEnd <= intervalOneEnd) return true;
+        
+        if(intervalTwoStart < intervalTwoEnd && intervalOneStart >= intervalTwoStart && intervalOneEnd <= intervalTwoEnd) return true;
 
-        if(intervalOneStart < intervalOneEnd && intervalTwoStart >= intervalOneStart && intervalTwoEnd <= intervalOneEnd){
-            return true;
-        }   
-
-        if(intervalTwoStart < intervalTwoEnd && intervalOneStart >= intervalTwoStart && intervalOneEnd <= intervalTwoEnd){
-            return true;
-        }
-    
         return false;
     }
 
 
     function overlaps(intervalOneStart: number, intervalOneEnd: number, intervalTwoStart: number, intervalTwoEnd: number){
-        if(intervalOneStart === intervalOneEnd && intervalOneStart >= intervalTwoStart && intervalOneEnd <= intervalTwoEnd) return true;
-    
-        if(intervalTwoStart === intervalTwoEnd && intervalTwoStart >= intervalOneStart && intervalTwoEnd <= intervalOneEnd) return true;
-        
-        if(intervalTwoStart >= intervalOneStart && intervalTwoEnd <= intervalOneEnd) return true;
-         
-        if(intervalOneStart >= intervalTwoStart && intervalOneEnd <= intervalTwoEnd) return true;
-    
-        if(intervalOneStart <= intervalTwoEnd && intervalOneEnd >= intervalTwoEnd) return true;
-        
-        if(intervalOneStart <= intervalTwoStart && intervalOneEnd >= intervalTwoStart) return true;
+        if(intervalWithin(intervalOneStart, intervalOneEnd, intervalTwoStart, intervalTwoEnd)) return true;
 
-        if(intervalTwoStart <= intervalOneEnd && intervalTwoEnd >= intervalOneEnd) return true;
-    
-        if(intervalTwoStart <= intervalOneStart && intervalTwoEnd >= intervalOneStart) return true;
-    
+        if(intervalOneStart <= intervalTwoEnd && intervalTwoStart <= intervalOneEnd) return true;
+        
         return false;
     }
 
@@ -71,14 +50,14 @@ function Dec3(){
 
         let intervalsWithinCounter = 0;
         let overlapCounter = 0;
-        let newArr = tmp.map((str) => {
+        tmp.map((str) => {
             let newStr = str.split(',');
             let intervalOne = getInterval(newStr[0]);
             let intervalTwo = getInterval(newStr[1]);
-            if(intervalWithin(Number(intervalOne[0]), Number(intervalOne[1]), Number(intervalTwo[0]), Number(intervalTwo[1]))){
+            if(intervalWithin(+intervalOne[0], +intervalOne[1], +intervalTwo[0], +intervalTwo[1])){
                 intervalsWithinCounter++;
             }
-            if(overlaps(Number(intervalOne[0]), Number(intervalOne[1]), Number(intervalTwo[0]), Number(intervalTwo[1]))){
+            if(overlaps(+intervalOne[0], +intervalOne[1], +intervalTwo[0], +intervalTwo[1])){
                 overlapCounter++;
             }
         
@@ -118,4 +97,4 @@ function Dec3(){
     </MainCard>
 }
 
-export default Dec3;
+export default Dec4;

@@ -20,6 +20,10 @@ export default function Home() {
               <Link href="/dec4">
                 <li>Day 4: Camp Cleanup.</li>
               </Link>
+
+              <Link href="/dec5">
+                <li>Day 5: ?</li>
+              </Link>
             </ul>
         </MainCard>
   )

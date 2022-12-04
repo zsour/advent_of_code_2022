@@ -69,6 +69,10 @@ function Dec3(){
         
         let tmp = input.split("\n");
 
+        if(tmp[tmp.length - 1] === ''){
+            tmp.pop();
+        }
+
         function partOne(){
             let startTimer = performance.now();
  

@@ -126,6 +126,11 @@ export default function Dec2() {
         if(input.length > 0){
             let startTimer = performance.now();
             let tmp = input.split("\n");
+
+            if(tmp[tmp.length - 1] === ''){
+                tmp.pop();
+            }
+            
             let totalScore = 0;
             let totalScorePartTwo = 0;
             for(let i = 0; i < tmp.length; i++){
