@@ -21,7 +21,7 @@ function Dec5(){
     ];
 
 
-    function moveCreates(arr: string[][], numberOfCrates: number, from: number, to: number){
+    function moveCrates(arr: string[][], numberOfCrates: number, from: number, to: number){
         let tmp = arr;
 
         let newArr: string[] = [];
@@ -37,7 +37,7 @@ function Dec5(){
         return tmp;
     }
 
-    function moveCreatesPartTwo(arr: string[][], numberOfCrates: number, from: number, to: number){
+    function moveCratesPartTwo(arr: string[][], numberOfCrates: number, from: number, to: number){
         let tmp = arr;
 
         let newArr: string[] = [];
@@ -74,7 +74,7 @@ function Dec5(){
 
         for(let i = 0; i < newArr.length; i++){
             if(newArr[i][0] && newArr[i][1] && newArr[i][2]){   
-                stacks = moveCreatesPartTwo(stacks, newArr[i][0], newArr[i][1], newArr[i][2]);
+                stacks = moveCratesPartTwo(stacks, newArr[i][0], newArr[i][1], newArr[i][2]);
             }
         }
         
