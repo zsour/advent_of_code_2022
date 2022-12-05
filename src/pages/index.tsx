@@ -22,7 +22,7 @@ export default function Home() {
               </Link>
 
               <Link href="/dec5">
-                <li>Day 5: ?</li>
+                <li>Day 5: Supply Stacks.</li>
               </Link>
             </ul>
         </MainCard>

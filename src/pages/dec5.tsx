@@ -23,15 +23,30 @@ function Dec5(){
 
     function moveCreates(arr: string[][], numberOfCrates: number, from: number, to: number){
         let tmp = arr;
-        if(numberOfCrates > tmp[from - 1].length){
-            numberOfCrates = tmp[from - 1].length;
-        }
 
         let newArr: string[] = [];
         for(let i = 0; i < numberOfCrates; i++){   
             newArr[i] = tmp[from - 1][tmp[from - 1].length - 1];
             tmp[from - 1].pop();
         }
+
+        for(let i = 0; i < newArr.length; i++){
+            tmp[to - 1].push(newArr[i]);
+        }
+
+        return tmp;
+    }
+
+    function moveCreatesPartTwo(arr: string[][], numberOfCrates: number, from: number, to: number){
+        let tmp = arr;
+
+        let newArr: string[] = [];
+        for(let i = 0; i < numberOfCrates; i++){   
+            newArr[i] = tmp[from - 1][tmp[from - 1].length - 1];
+            tmp[from - 1].pop();
+        }
+
+        newArr = newArr.reverse();
 
         for(let i = 0; i < newArr.length; i++){
             tmp[to - 1].push(newArr[i]);
@@ -53,13 +68,13 @@ function Dec5(){
         }
 
         let newArr = tmp.map((str) => {
-            let newStr = str.split("");
-            return newStr.filter(Number);
+            let newStr = str.split(" ");   
+            return [+newStr[1], +newStr[3], +newStr[5]];
         });
 
         for(let i = 0; i < newArr.length; i++){
             if(newArr[i][0] && newArr[i][1] && newArr[i][2]){   
-                stacks = moveCreates(stacks, +newArr[i][0], +newArr[i][1], +newArr[i][2]);
+                stacks = moveCreatesPartTwo(stacks, newArr[i][0], newArr[i][1], newArr[i][2]);
             }
         }
         
@@ -75,7 +90,7 @@ function Dec5(){
        
     }, [input]);
 
-    return <MainCard title='Day 5: ?'>                
+    return <MainCard title='Day 5: Supply Stacks.'>                
             <InputArea inputChange={(val: string) => {
                 setInput(val);
             }} />
@@ -83,13 +98,13 @@ function Dec5(){
             <div className="result-area">
                 <div className="result">
                     <p className="result-text">
-                        Part 1: {String(puzzleOneResult)}.
+                        CrateMover 9000: {String(puzzleOneResult)}.
                     </p>
                 </div>
 
                 <div className="result">
                     <p className="result-text">
-                        Part 2: {String(puzzleTwoResult)}.
+                        CrateMover 9001: {String(puzzleTwoResult)}.
                     </p>
 
                     <p className="result-text">
