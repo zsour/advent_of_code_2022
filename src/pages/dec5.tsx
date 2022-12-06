@@ -5,7 +5,7 @@ import InputArea from '../components/InputArea';
 function Dec5(){
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
-    const [puzzleTwoResult, setPuzzleResultTwo] = useState(0);
+    const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
     const [timer, setTimer] = useState("0 ms.");
 
     let stacks: string[][] = [

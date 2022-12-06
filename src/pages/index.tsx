@@ -24,6 +24,10 @@ export default function Home() {
               <Link href="/dec5">
                 <li>Day 5: Supply Stacks.</li>
               </Link>
+
+              <Link href="/dec6">
+                  <li>Day 6: Tuning Trouble.</li>
+              </Link>
             </ul>
         </MainCard>
   )
