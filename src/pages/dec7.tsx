@@ -100,13 +100,6 @@ function Dec7(){
         if(tmp[tmp.length - 1] === ''){
             tmp.pop();
         }
-
-        try{
-           console.log(tree);
-           
-        }catch(err){
-            console.log(err);
-        }
         
         for(let i = 0; i < tmp.length; i++){
             let split = tmp[i].split(" ");
