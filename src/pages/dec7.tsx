@@ -264,7 +264,7 @@ function Dec7(){
             <div className="result-area">
                 <div className="result">
                     <p className="result-text">
-                        Result 1: {String(puzzleOneResult)}.
+                        Size under 100000 sum: {String(puzzleOneResult)}.
                     </p>
 
                     <p className="result-text">
@@ -274,7 +274,7 @@ function Dec7(){
 
                 <div className="result">
                     <p className="result-text">
-                        Result 2: {String(puzzleTwoResult)}.
+                        Min size to delete: {String(puzzleTwoResult)}.
                     </p>
 
                     <p className="result-text">

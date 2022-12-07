@@ -29,9 +29,12 @@ export default function Home() {
                   <li>Day 6: Tuning Trouble.</li>
               </Link>
 
-
               <Link href="/dec7">
                 <li>Day 7: No Space Left On Device.</li>
+              </Link>
+
+              <Link href="/dec8">
+                <li>Day 8: ?</li>
               </Link>
             </ul>
         </MainCard>
