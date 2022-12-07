@@ -1,9 +1,6 @@
 import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
-import css from 'styled-jsx/css';
-import { Dir } from 'fs';
-
 
 interface File{
     name: string;
@@ -46,88 +43,95 @@ class Node{
 class Tree{
     root: Node;
     sum: number[];
+    partTwoNumbers: number[];
+
     constructor(root: Node){
         this.root = root;
         this.sum = [];
+        this.partTwoNumbers = [];
+    }
+
+    accessPathNode(path: string[], currentNode: Node = this.root, operation: CallableFunction){
+        let tmpPath = [...path];   
+        if(tmpPath.length === 0){
+            operation(currentNode);
+        }else{
+            let nodeFound = false;
+            for(let i = 0; i < currentNode.children.length; i++){
+                    if(currentNode.children[i].data.name === tmpPath[0]){
+                        tmpPath.shift();
+                        nodeFound = true;
+                        this.accessPathNode(tmpPath, currentNode.children[i], operation);
+                        break;
+                    }
+            }
+
+            if(!nodeFound){
+                console.log("currentPath:", path, "children:", currentNode.children);
+            }
+        }
     }
 
     addDir(path: string[], newDir: Directory, currentNode: Node = this.root){     
-        let tmpPath = [...path];   
-        if(tmpPath.length === 0){
+        this.accessPathNode(path, currentNode, (node: Node) => {
             let exists = false;
-            for(let i = 0; i < currentNode.children.length; i++){
-                if(currentNode.children[i].data.name === newDir.name){
+            for(let i = 0; i < node.children.length; i++){
+                if(node.children[i].data.name === newDir.name){
                     exists = true;
                     break;
                 }
             }
 
             if(!exists){
-                currentNode.add(new Node(newDir, []));
+                node.add(new Node(newDir, []));
             }
-        }else{
-            let nodeFound = false;
-            for(let i = 0; i < currentNode.children.length; i++){
-                    if(currentNode.children[i].data.name === tmpPath[0]){
-                        tmpPath.shift();
-                        nodeFound = true;
-                        this.addDir(tmpPath, newDir, currentNode.children[i]);
-                        break;
-                    }
-            }
-
-            if(!nodeFound){
-                console.log("currentPath:", path, "children:", currentNode.children);
-            }
-        }
+        });
     }
+
 
     addFiles(path: string[], newFile: File, currentNode: Node = this.root){
-        let tmpPath = [...path];   
-        if(tmpPath.length === 0){
+        this.accessPathNode(path, currentNode, (node: Node) => {
             let exists = false;
-            for(let i = 0; i < currentNode.data.files.length; i++){
-                if(currentNode.data.files[i].name === newFile.name){
+            for(let i = 0; i < node.data.files.length; i++){
+                if(node.data.files[i].name === newFile.name){
                     exists = true;
                     break;
                 }
             }
 
             if(!exists){
-                currentNode.addFile(newFile);
+                node.addFile(newFile);
             }
-        }else{
-            let nodeFound = false;
-            for(let i = 0; i < currentNode.children.length; i++){
-                    if(currentNode.children[i].data.name === tmpPath[0]){
-                        tmpPath.shift();
-                        nodeFound = true;
-                        this.addFiles(tmpPath, newFile, currentNode.children[i]);
-                        break;
-                    }
-            }
-
-            if(!nodeFound){
-                console.log("currentPath:", path, "children:", currentNode.children);
-            }
-        }
+        });
     }
 
-    getSum(sum: number = 0, currentNode: Node = this.root){
+    totalStorage(){
+        return this.root.children[0].sum(0);
+    }
+
+    getAllDirectorySizesUnderSpecifiedSize(size: number, output: number[], currentNode: Node = this.root.children[0]){
         let numbers: number[] = [];
         for(let i = 0; i < currentNode.children.length; i++){
             let total = 0;
             total += currentNode.children[i].sum(0);
- 
-            if(total < 100000 && total !== 0){
-                numbers.push(total);
+            if(total < size && total !== 0){
+                output.push(total);
             }
 
-            this.getSum(0, currentNode.children[i]);
+            this.getAllDirectorySizesUnderSpecifiedSize(size, output, currentNode.children[i]);
         }
-        
-        if(numbers.length > 0){
-            this.sum.push(...numbers);
+    }
+
+    minSizeAvailableForDeletion(sizeNeeded: number, output: number[], currentNode: Node = this.root.children[0]){
+        let numbers: number[] = [];
+        for(let i = 0; i < currentNode.children.length; i++){
+            let total = 0;
+            total += currentNode.children[i].sum(0);
+            if(total - sizeNeeded > 0){
+                output.push(total);
+            }
+
+            this.minSizeAvailableForDeletion(sizeNeeded, output, currentNode.children[i]);
         }
     }
 }
@@ -153,7 +157,7 @@ function Dec7(){
     }
 
     function cd(arr: string[], directory: string){
-        let tmp = arr;
+        let tmp = [...arr];
         if(directory === '/'){
             return ['/'];
         }
@@ -195,13 +199,13 @@ function Dec7(){
         }
     }
 
-    
-
 
     useEffect(() => {
         if(input.length === 0){
             return;
         }
+
+        let startTimer = performance.now();
 
         let tmp = input.split("\n");
         if(tmp[tmp.length - 1] === ''){
@@ -232,22 +236,23 @@ function Dec7(){
                 continue;
             }
         }
-        let total = 0;
-        tree.getSum(0, tree.root.children[0]);
-        console.log(tree.sum);
-
-        let number = tree.sum.reduce((prev, current) => {
+        
+        let partOneOutput:number[] = [];
+        tree.getAllDirectorySizesUnderSpecifiedSize(100000, partOneOutput);
+        let partOneResult = partOneOutput.reduce((prev, current) => {
             return prev + current;
         });
+
+        setPuzzleOneResult(partOneResult);
+        setTimerOne(`${(performance.now() - startTimer).toFixed(1)} ms.`);
+
+        let partTwoOutput:number[] = [];
+        let storageNeeded = 30000000 - (70000000 - tree.totalStorage());
         
-        
-        console.log(tree);
-        console.log(total);
-        console.log(number);
-        
-        
-        
-        let startTimer = performance.now();
+        tree.minSizeAvailableForDeletion(storageNeeded, partTwoOutput);
+        let sortedPartTwo = partTwoOutput.sort();
+        setPuzzleTwoResult(sortedPartTwo[sortedPartTwo.length - 1]);
+        setTimerTwo(`${(performance.now() - startTimer).toFixed(1)} ms.`);
 
     }, [input]);
 
