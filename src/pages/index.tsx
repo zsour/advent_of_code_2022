@@ -28,6 +28,11 @@ export default function Home() {
               <Link href="/dec6">
                   <li>Day 6: Tuning Trouble.</li>
               </Link>
+
+
+              <Link href="/dec7">
+                <li>Day 7: No Space Left On Device.</li>
+              </Link>
             </ul>
         </MainCard>
   )
