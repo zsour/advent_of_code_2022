@@ -38,7 +38,7 @@ export default function Home() {
               </Link>
 
               <Link href="/dec9">
-                <li>Day 9: ?</li>
+                <li>Day 9: Rope Bridge.</li>
               </Link>
             </ul>
         </MainCard>

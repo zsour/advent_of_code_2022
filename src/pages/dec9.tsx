@@ -6,7 +6,8 @@ function Dec9(){
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
     const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
-    const [timer, setTimer] = useState("0 ms.");
+    const [timerOne, setTimerOne] = useState("0 ms.");
+    const [timerTwo, setTimerTwo] = useState("0 ms.");
 
     interface Position{
         x: number;
@@ -16,7 +17,7 @@ function Dec9(){
     let headPos: Position = {y: 0, x: 0};
     let tailPos: Position = {y: 0, x: 0};
     let allTailPositions: Position[] = [{y: 0, x: 0}];
-
+    let allLastKnotPositions: Position[] = [{y: 0, x: 0}];
 
     let knots: Position[] = [
         {y: 0, x: 0},
@@ -115,6 +116,7 @@ function Dec9(){
     }
 
     function moveKnots(dir: string, knotIndex: number = 0){
+        
         if(knotIndex === knots.length){
             return;
         }
@@ -130,7 +132,19 @@ function Dec9(){
             moveKnots(dir, knotIndex + 1);
         }else{
             let movedKnot = false;
-            if(knots[knotIndex - 1].x > knots[knotIndex].x + 1){
+            if((knots[knotIndex - 1].x > knots[knotIndex].x + 1) && (knots[knotIndex - 1].y > knots[knotIndex].y + 1)){
+                knots[knotIndex] = {y: knots[knotIndex].y + 1, x: knots[knotIndex].x + 1};
+                movedKnot = true;
+            }else if((knots[knotIndex - 1].x < knots[knotIndex].x - 1) && (knots[knotIndex - 1].y > knots[knotIndex].y + 1)){
+                knots[knotIndex] = {y: knots[knotIndex].y + 1, x: knots[knotIndex].x - 1};
+                movedKnot = true;
+            }else if((knots[knotIndex - 1].x > knots[knotIndex].x + 1) && (knots[knotIndex - 1].y < knots[knotIndex].y - 1)){
+                knots[knotIndex] = {y: knots[knotIndex].y - 1, x: knots[knotIndex].x + 1};
+                movedKnot = true;
+            }else if((knots[knotIndex - 1].x < knots[knotIndex].x - 1) && (knots[knotIndex - 1].y < knots[knotIndex].y - 1)){
+                knots[knotIndex] = {y: knots[knotIndex].y - 1, x: knots[knotIndex].x - 1};
+                movedKnot = true;
+            }else if(knots[knotIndex - 1].x > knots[knotIndex].x + 1){
                 if(knots[knotIndex - 1].y !== knots[knotIndex].y){
                     knots[knotIndex] = {y: knots[knotIndex - 1].y, x: knots[knotIndex].x + 1};
                 }else{
@@ -138,9 +152,7 @@ function Dec9(){
                 }
 
                 movedKnot = true;
-            }
-    
-            if(knots[knotIndex - 1].x < knots[knotIndex].x - 1){
+            }else if(knots[knotIndex - 1].x < knots[knotIndex].x - 1){
                 if(knots[knotIndex - 1].y !== knots[knotIndex].y){
                     knots[knotIndex] = {y: knots[knotIndex - 1].y, x: knots[knotIndex].x - 1};
                 }else{
@@ -148,9 +160,7 @@ function Dec9(){
                 }
 
                 movedKnot = true;
-            }
-    
-            if(knots[knotIndex - 1].y > knots[knotIndex].y + 1){
+            }else if(knots[knotIndex - 1].y > knots[knotIndex].y + 1){
                 if(knots[knotIndex - 1].x !== knots[knotIndex].x){
                     knots[knotIndex] = {y: knots[knotIndex].y + 1, x: knots[knotIndex - 1].x};
                 }else{
@@ -158,9 +168,7 @@ function Dec9(){
                 }
 
                 movedKnot = true;
-            }
-    
-            if(knots[knotIndex - 1].y < knots[knotIndex].y - 1){
+            }else if(knots[knotIndex - 1].y < knots[knotIndex].y - 1){
                 if(knots[knotIndex - 1].x !== knots[knotIndex].x){
                     knots[knotIndex] = {y: knots[knotIndex].y - 1, x: knots[knotIndex - 1].x};
                 }else{
@@ -171,6 +179,9 @@ function Dec9(){
             }
 
             if(movedKnot){
+                if(knotIndex === knots.length - 1){                    
+                    allLastKnotPositions.push(knots[knotIndex]);
+                }
                 moveKnots(dir, knotIndex + 1);
             }else{
                 return;
@@ -193,38 +204,56 @@ function Dec9(){
             tmp.pop();
         }
 
-        // for(let i = 0; i < tmp.length; i++){
-        //     moveHead(tmp[i]);
-        // }
+        for(let i = 0; i < tmp.length; i++){
+            moveHead(tmp[i]);
+        }
 
-        // let unique = isUniquePosition(allTailPositions);
-        // console.log(unique.length);
+        let resultOne = isUniquePosition(allTailPositions);
+        setPuzzleOneResult(resultOne.length);
+        setTimerOne(`${(performance.now() - startTimer).toFixed(1)} ms.`);
+
+        for(let i = 0; i < tmp.length; i++){
+            let split = tmp[i].split(" ");
+            for(let j = 0; j < +split[1]; j++){
+                moveKnots(split[0]);  
+            }
+        }
         
-        console.log(knots);
-        moveKnots("R");
-        moveKnots("R");
-        moveKnots("R");
-        moveKnots("R");
-        moveKnots("U");
-        moveKnots("U");
-        moveKnots("U");
-        moveKnots("U");
-        console.log(knots);
+        let resultTwo = isUniquePosition(allLastKnotPositions);
+        setPuzzleTwoResult(resultTwo.length);
         
 
         // Insert code here.
         
-        setTimer(`${(performance.now() - startTimer).toFixed(1)} ms.`);
+        setTimerTwo(`${(performance.now() - startTimer).toFixed(1)} ms.`);
 
     }, [input]);
 
-    return <MainCard title='Day 9: ?'>                
+    return <MainCard title='Day 9: Rope Bridge?'>                
             <InputArea inputChange={(val: string) => {
                 setInput(val);
             }} />
 
             <div className="result-area">
-           
+                <div className="result">
+                    <p className="result-text">
+                        Number of tail positions: {String(puzzleOneResult)}.
+                    </p>
+
+                    <p className="result-text">
+                        Performance messure: {timerOne}
+                    </p>
+                </div>
+
+                <div className="result">
+                    <p className="result-text">
+                        Number of tail positions (9 knots): {String(puzzleTwoResult)}.
+                    </p>
+
+                    <p className="result-text">
+                        Performance messure: {timerTwo}
+                    </p>
+                </div>
             </div>
     </MainCard>
 }
