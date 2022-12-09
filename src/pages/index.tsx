@@ -36,6 +36,10 @@ export default function Home() {
               <Link href="/dec8">
                 <li>Day 8: Treetop Tree House.</li>
               </Link>
+
+              <Link href="/dec9">
+                <li>Day 9: ?</li>
+              </Link>
             </ul>
         </MainCard>
   )

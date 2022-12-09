@@ -209,3 +209,31 @@ textarea {
     color: white;
     font-size: 25px;
 }
+
+.map{
+    width: 500px;
+    height: 500px;
+    line-height: 4px;
+}
+
+.pixel{
+    width: 10px;
+    height: 10px;
+    background-color: blue;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px;
+    padding: 0px;
+    border: solid 0.2px black;
+}
+
+.black-pixel{
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px;
+    padding: 0px;
+    border: solid 0.2px black;
+}
