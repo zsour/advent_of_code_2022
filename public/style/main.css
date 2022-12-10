@@ -211,29 +211,29 @@ textarea {
 }
 
 .map{
-    width: 500px;
-    height: 500px;
-    line-height: 4px;
+    width: 400px;
+    height: 60px;
+    line-height: 10px;
+    margin-bottom: 10px;
 }
 
-.pixel{
+.pixel-white{
     width: 10px;
     height: 10px;
-    background-color: blue;
+    background-color: white;
     display: inline-block;
     vertical-align: top;
     margin: 0px;
     padding: 0px;
-    border: solid 0.2px black;
+    border: solid 0.2px rgba(0, 0, 0, 0.25);
 }
 
-.black-pixel{
+.pixel-black{
     width: 10px;
     height: 10px;
-    background-color: red;
     display: inline-block;
     vertical-align: top;
     margin: 0px;
     padding: 0px;
-    border: solid 0.2px black;
+    border: solid 0.2px rgba(0, 0, 0, 0.25);
 }

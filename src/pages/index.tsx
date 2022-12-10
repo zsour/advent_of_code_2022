@@ -40,6 +40,10 @@ export default function Home() {
               <Link href="/dec9">
                 <li>Day 9: Rope Bridge.</li>
               </Link>
+
+              <Link href="/dec10">
+                <li>Day 10: Cathode-Ray Tube.</li>              
+              </Link>
             </ul>
         </MainCard>
   )
