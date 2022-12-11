@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
+import BigNumber from '../components/big-number';
 
 interface Operation{
     operator: string;
@@ -22,7 +23,7 @@ function doOpertion(op: Operation, old: number){
     let numberTwo = (op.numberTwo === 'old') ? old : +op.numberTwo;
     
     switch(op.operator){
-        case "+": return numberOne + numberTwo;
+        case "+": return numberOne +numberTwo;
         case "*": return numberOne * numberTwo;
         default: return 0;
     }
@@ -95,15 +96,15 @@ function Dec11(){
             monkeyList.push(monkey);
         }
 
-        for(let rounds = 0; rounds < 10000; rounds++){
+        for(let rounds = 0; rounds < 20; rounds++){
             for(let i = 0; i < monkeyList.length; i++){
                 if(monkeyList[i].items.length !== 0){
                     for(let j = 0; j < monkeyList[i].items.length; j++){
                         let oldWorryLevel = monkeyList[i].items[j];
                         let newWorryLevel = doOpertion(monkeyList[i].opereration, oldWorryLevel);
-        
-                        
-                        if(newWorryLevel % monkeyList[i].conditionalDivision === 0){
+            
+                        if(BigNumber(newWorryLevel).mod(monkeyList[i].conditionalDivision)?.toString() == '0'){
+                  
                             monkeyList[monkeyList[i].trueThrowTo].items.push(newWorryLevel);
                         }else{
                             monkeyList[monkeyList[i].falseThrowTo].items.push(newWorryLevel);
@@ -127,8 +128,6 @@ function Dec11(){
         inspectedItemsList = inspectedItemsList.sort((a, b) => {
             return a - b;
         });
-
-        console.log(inspectedItemsList);
         
         setPuzzleOneResult(inspectedItemsList[inspectedItemsList.length - 2] * inspectedItemsList[inspectedItemsList.length - 1]);
     
@@ -143,7 +142,7 @@ function Dec11(){
             <div className="result-area">
                 <div className="result">
                     <p className="result-text">
-                        Monkey business after 20 rounds: {String(puzzleOneResult)}.
+                        Monkey business after 10000 rounds: {String(puzzleOneResult)}.
                     </p>
 
                     <p className="result-text">

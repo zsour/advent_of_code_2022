@@ -1,10 +1,14 @@
 import type { AppProps } from 'next/app';
 import '../../public/style/main.css';
 import Head from 'next/head';
+import Script from 'next/script';
 export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+    <Script src='big-number.js'>
+
+    </Script>
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
