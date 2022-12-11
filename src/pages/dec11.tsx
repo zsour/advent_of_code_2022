@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
-import BigNumber from '../components/big-number';
+import BN from '../components/bn';
 
 interface Operation{
     operator: string;
@@ -11,21 +11,21 @@ interface Operation{
 
 interface Monkey{
     inspectedItems: number;
-    items: number[];
+    items: bigint[];
     opereration: Operation;
-    conditionalDivision: number;
+    conditionalDivision: bigint;
     trueThrowTo: number;
     falseThrowTo: number;
 }
 
-function doOpertion(op: Operation, old: number){
-    let numberOne = (op.numberOne === 'old') ? old : +op.numberOne;
-    let numberTwo = (op.numberTwo === 'old') ? old : +op.numberTwo;
+function doOpertion(op: Operation, old: bigint){
+    let numberOne = (op.numberOne === 'old') ? old : BigInt(op.numberOne);
+    let numberTwo = (op.numberTwo === 'old') ? old : BigInt(op.numberTwo);
     
     switch(op.operator){
-        case "+": return numberOne +numberTwo;
-        case "*": return numberOne * numberTwo;
-        default: return 0;
+        case "+": return BigInt(numberOne + numberTwo);
+        case "*": return BigInt(numberOne * numberTwo);
+        default: return BigInt(0);
     }
 }
 
@@ -59,6 +59,9 @@ function Dec11(){
             });
             startingItemsArr.splice(0, 4);
             
+            let bigintList = startingItemsArr.map((num:  number) => {
+                return BigInt(num);
+            });
 
             let operation = tmp[i+2];
             let operationStringArr = operation.split(" ");
@@ -80,7 +83,7 @@ function Dec11(){
             let monkey: Monkey = {
                 inspectedItems: 0,
 
-                items: startingItemsArr, 
+                items: bigintList, 
                 
                 opereration: {
                     operator: operationStringArr[1],
@@ -88,7 +91,7 @@ function Dec11(){
                     numberTwo: operationStringArr[2]
                 }, 
 
-                conditionalDivision,
+                conditionalDivision: BigInt(conditionalDivision),
                 trueThrowTo,
                 falseThrowTo
             };
@@ -96,19 +99,29 @@ function Dec11(){
             monkeyList.push(monkey);
         }
 
-        for(let rounds = 0; rounds < 20; rounds++){
+        function modulo(divident: string, divisor: string, partLength: number) {
+            while (divident.length > partLength) {
+                var part = divident.substring(0, partLength);
+                divident = (+part % +divisor) +  divident.substring(partLength);          
+            }
+        
+            return +divident % +divisor;
+        }
+
+        for(let rounds = 0; rounds < 10000; rounds++){
             for(let i = 0; i < monkeyList.length; i++){
                 if(monkeyList[i].items.length !== 0){
                     for(let j = 0; j < monkeyList[i].items.length; j++){
                         let oldWorryLevel = monkeyList[i].items[j];
                         let newWorryLevel = doOpertion(monkeyList[i].opereration, oldWorryLevel);
-            
-                        if(BigNumber(newWorryLevel).mod(monkeyList[i].conditionalDivision)?.toString() == '0'){
-                  
-                            monkeyList[monkeyList[i].trueThrowTo].items.push(newWorryLevel);
-                        }else{
-                            monkeyList[monkeyList[i].falseThrowTo].items.push(newWorryLevel);
-                        }
+                
+                        // if(newWorryLevel % monkeyList[i].conditionalDivision === BigInt(0)){
+                        //     monkeyList[monkeyList[i].trueThrowTo].items.push(newWorryLevel);
+                        // }else{
+                        //     monkeyList[monkeyList[i].falseThrowTo].items.push(newWorryLevel);
+                        // }
+
+                        //monkeyList[monkeyList[i].falseThrowTo].items.push(newWorryLevel);
                     }
         
                     monkeyList[i].inspectedItems += monkeyList[i].items.length;

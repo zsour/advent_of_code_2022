@@ -15,7 +15,7 @@
     "@types/node": "18.11.10",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
-    "big-number": "^2.0.0",
+    "bn.js": "^5.2.1",
     "next": "13.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
