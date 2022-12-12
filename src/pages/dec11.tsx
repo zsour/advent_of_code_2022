@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
-import BN from '../components/bn';
 
 interface Operation{
     operator: string;
@@ -99,15 +98,7 @@ function Dec11(){
             monkeyList.push(monkey);
         }
 
-        function modulo(divident: string, divisor: string, partLength: number) {
-            while (divident.length > partLength) {
-                var part = divident.substring(0, partLength);
-                divident = (+part % +divisor) +  divident.substring(partLength);          
-            }
         
-            return +divident % +divisor;
-        }
-
         for(let rounds = 0; rounds < 10000; rounds++){
             for(let i = 0; i < monkeyList.length; i++){
                 if(monkeyList[i].items.length !== 0){
@@ -147,7 +138,7 @@ function Dec11(){
         setTimerTwo(`${(performance.now() - startTimer).toFixed(1)} ms.`);
     }, [input]);
 
-    return <MainCard title='Day 11: ?'>                
+    return <MainCard title='Day 11: Monkey in the Middle.'>                
             <InputArea inputChange={(val: string) => {
                 setInput(val);
             }} />

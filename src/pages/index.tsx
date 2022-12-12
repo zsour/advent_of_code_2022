@@ -46,7 +46,11 @@ export default function Home() {
               </Link>
 
               <Link href="/dec11">
-                <li>Day 11: ?</li>              
+                <li>Day 11: Monkey in the Middle.</li>              
+              </Link>
+
+              <Link href="/dec12">
+                <li>Day 12: Hill Climbing Algorithm.</li>              
               </Link>
             </ul>
         </MainCard>
