@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
+import { visitIterationBody } from 'typescript';
 
 function Dec12(){
     const [input, setInput] = useState("");
@@ -14,60 +15,36 @@ function Dec12(){
         y: number;
     }
 
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
-
-    function getHeightDif(letterOne: string, letterTwo: string){        
-        if(!letterOne || !letterTwo){
-            return undefined;
-        }
-
-        let letterTmp = letterOne;
-        let letterTmpTwo = letterOne;
-        if(letterOne === "S"){
-            letterTmp = "a";
-        }
-
-        if(letterTwo === "S"){
-            letterTmpTwo = "a";
-        }
-
-        return Math.abs(alphabet.indexOf(letterTmpTwo) - alphabet.indexOf(letterTmp));
+    interface Node{
+        letter: string;
+        neighbours: Position[];
+        height: number;
     }
 
-    function getAvailablePaths(currentPos: Position, map: string[][], cameFrom: string = ""){
-        let availablePositions: Position[] = [];
-        
-            let upDif; 
-            let downDif;
-            let leftDif;
-            let rightDif;
-            if(currentPos.y - 1 > 0){
-                upDif = getHeightDif(map[currentPos.y][currentPos.x], map[currentPos.y - 1][currentPos.x]);
-            }
+    interface Graph{
+        nodes: Node[];
+    }
 
-            if(currentPos.y < map.length){
-                downDif = getHeightDif(map[currentPos.y][currentPos.x], map[currentPos.y + 1][currentPos.x]);
-            }
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-            if(currentPos.x - 1 > 0){
-                leftDif = getHeightDif(map[currentPos.y][currentPos.x], map[currentPos.y][currentPos.x - 1]);
-            }
+    function getHeightValue(char: string){
+        return alphabet.indexOf(char);
+    }
 
-            if(currentPos.x < map[0].length){
-                rightDif = getHeightDif(map[currentPos.y][currentPos.x], map[currentPos.y][currentPos.x + 1]);
-            }
-
-            if(upDif !== undefined && (upDif === 1 || upDif === 0) && cameFrom !== "up") availablePositions.push({x: currentPos.x, y: currentPos.y - 1});
-            if(downDif !== undefined && (downDif === 1 || downDif === 0) && cameFrom !== "down") availablePositions.push({x: currentPos.x, y: currentPos.y + 1});
-            if(rightDif != undefined && (rightDif === 1 || rightDif === 0) && cameFrom !== "right") availablePositions.push({x: currentPos.x + 1, y: currentPos.y});
-            if(leftDif != undefined && (leftDif === 1 || leftDif === 0) && cameFrom !== "left") availablePositions.push({x: currentPos.x - 1, y: currentPos.y});
+    function getNeighbour(graph: Graph, pos: Position){
+        let tmp = []; 
     
-            return availablePositions;
+        const chunkSize = 83;
+        for (let i = 0; i < graph.nodes.length; i += chunkSize) {
+            const chunk = graph.nodes.slice(i, i + chunkSize);
+            tmp.push(chunk);
+        }
+        
+        return tmp[pos.y][pos.x];
     }
 
     let visitedPositions: Position[] = [];
-
-    function hasVisited(pos: Position){
+    function isVisited(pos: Position){
         let visited = false;
         for(let i = 0; i < visitedPositions.length; i++){
             if(visitedPositions[i].x === pos.x && visitedPositions[i].y === pos.y){
@@ -75,57 +52,30 @@ function Dec12(){
                 break;
             }
         }
-
         return visited;
     }
 
-    function traverse(startingPos: Position, map: string[][], cameFrom: string = "", depth: number = 0){
-        let depthList: number[] = [];
-
-        visitedPositions.push(startingPos);
-        if(depth > 1){
+    function traverse(graph: Graph, currentNode: Node, depth: number = 0): number[]{
+        let depthList = [];
+        if(depth === 10000){
             return [];
         }
-        
-        if(map[startingPos.y][startingPos.x] === "E"){
+        if(currentNode.letter === "E"){
             return [depth];
         }
 
-        let availablePositions = getAvailablePaths(startingPos, map, cameFrom);
+        for(let i = 0; i < currentNode.neighbours.length; i++){
+            let heightDif = Math.abs(currentNode.height - getNeighbour(graph, currentNode.neighbours[i]).height);
 
-        if(availablePositions.length === 0){
-            return [];
-        }
-        console.log(startingPos, availablePositions);
-        
-        for(let i = 0; i < availablePositions.length; i++){
-            if(hasVisited(availablePositions[i])){
-                continue;
-            }
-            if(availablePositions[i].x === startingPos.x - 1){
-                depthList.push(...traverse(availablePositions[i], map, "right", depth+1));
-                continue;
-            }
-
-            if(availablePositions[i].x === startingPos.x + 1){
-                depthList.push(...traverse(availablePositions[i], map, "left", depth+1));
-                continue;
-            }
-
-            if(availablePositions[i].y === startingPos.y - 1){
-                depthList.push(...traverse(availablePositions[i], map, "up", depth+1));
-                continue;
-            }
-
-            if(availablePositions[i].y === startingPos.y + 1){
-                depthList.push(...traverse(availablePositions[i], map, "down", depth+1));
-                continue;
+            if((heightDif === 0 || heightDif === 1) && !isVisited(currentNode.neighbours[i])){
+                visitedPositions.push(currentNode.neighbours[i]);
+                depthList.push(...traverse(graph, getNeighbour(graph, currentNode.neighbours[i]), depth + 1));
             }
         }
 
         return depthList;
     }
-      
+
     useEffect(() => {
         if(input.length === 0){
             return;
@@ -138,30 +88,54 @@ function Dec12(){
             tmp.pop();
         }
 
-        let map: string[][] = [];
-        let startingPosFound = false;
-        let startingPos: Position = {x: 0, y: 0};
+        let graph: Graph = {nodes: []};
+        let startingNode = {x:0, y:0};
+        let finishNode = {x:0, y:0};
+
         for(let i = 0; i < tmp.length; i++){
             let split = tmp[i].split("");
-            if(!startingPosFound){
-                for(let j = 0; j < split.length; j++){
-                    if(split[j] === "S"){
-                        startingPosFound = true;
-                        startingPos = {x: j, y: i};
-                        break;
-                    }
+            for(let j = 0; j < split.length; j++){
+                let node: Node;
+                if(tmp[i][j] === 'S'){
+                    startingNode = {x: j, y: i};
+                    node = {height: getHeightValue('a'), neighbours: [], letter: tmp[i][j]};
+                }else if(tmp[i][j] === 'E'){
+                    finishNode = {x: j, y: i};
+                    node = {height: getHeightValue('z'), neighbours: [], letter: tmp[i][j]};
+                }else{
+                    node = {height: getHeightValue(tmp[i][j]), neighbours: [], letter: tmp[i][j]};
                 }
+                
+                if((i - 1) >= 0){
+                    node.neighbours.push({x: j, y: i - 1});
+                }
+
+                if((i + 1) < tmp.length){
+                    node.neighbours.push({x: j, y: i + 1});
+                }
+
+                if((j - 1) >= 0){
+                    node.neighbours.push({x: j - 1, y: i});
+                }
+
+                if((j + 1) < split.length){
+                    node.neighbours.push({x: j + 1, y: i});
+                }
+
+                graph.nodes.push(node);
             }
-    
-            map.push(split);
         }
 
-        console.log(startingPos);
-        
-
-        let depthList = traverse(startingPos, map);
-        
-
+        visitedPositions.push(startingNode);
+        console.log(traverse(graph, getNeighbour(graph, startingNode)));  
+        console.log(visitedPositions);
+        for(let i = 0; i < visitedPositions.length; i++){
+            if(visitedPositions[i].x === finishNode.x && visitedPositions[i].y === finishNode.y){
+                console.log(true);
+            }
+            console.log(false);
+        }
+              
     }, [input]);
 
     return <MainCard title='Day 12: Hill Climbing Algorithm.'>                
