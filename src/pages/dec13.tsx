@@ -180,7 +180,7 @@ function Dec13(){
             <div className="result-area">
                 <div className="result">
                     <p className="result-text">
-                        Result 1: {String(puzzleOneResult)}.
+                        Sum of ordered pairs: {String(puzzleOneResult)}.
                     </p>
 
                     <p className="result-text">
@@ -190,7 +190,7 @@ function Dec13(){
 
                 <div className="result">
                     <p className="result-text">
-                        Result 2: {String(puzzleTwoResult)}.
+                        Dividers indecies multiplied: {String(puzzleTwoResult)}.
                     </p>
 
                     <p className="result-text">
