@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
-import { visitIterationBody } from 'typescript';
+
 
 function Dec12(){
     const [input, setInput] = useState("");
@@ -57,7 +57,9 @@ function Dec12(){
 
     function traverse(graph: Graph, currentNode: Node, depth: number = 0): number[]{
         let depthList = [];
-        if(depth === 10000){
+        console.log(currentNode);
+        
+        if(depth === 2){
             return [];
         }
         if(currentNode.letter === "E"){
@@ -127,15 +129,7 @@ function Dec12(){
         }
 
         visitedPositions.push(startingNode);
-        console.log(traverse(graph, getNeighbour(graph, startingNode)));  
-        console.log(visitedPositions);
-        for(let i = 0; i < visitedPositions.length; i++){
-            if(visitedPositions[i].x === finishNode.x && visitedPositions[i].y === finishNode.y){
-                console.log(true);
-            }
-            console.log(false);
-        }
-              
+        console.log(traverse(graph, getNeighbour(graph, startingNode)));     
     }, [input]);
 
     return <MainCard title='Day 12: Hill Climbing Algorithm.'>                

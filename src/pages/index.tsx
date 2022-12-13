@@ -52,6 +52,10 @@ export default function Home() {
               <Link href="/dec12">
                 <li>Day 12: Hill Climbing Algorithm.</li>              
               </Link>
+
+              <Link href="/dec13">
+                <li>Day 13: Distress Signal.</li>              
+              </Link>
             </ul>
         </MainCard>
   )
