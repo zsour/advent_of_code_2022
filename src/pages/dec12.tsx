@@ -10,72 +10,46 @@ function Dec12(){
     const [timerOne, setTimerOne] = useState("0 ms.");
     const [timerTwo, setTimerTwo] = useState("0 ms.");
 
+
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+    function getHeightValue(char: string){
+        if(char === "S"){
+            return alphabet.indexOf("a");
+        }else if(char === "E"){
+            return alphabet.indexOf("z");
+        }
+
+        return alphabet.indexOf(char);
+    }
+
+
     interface Position{
         x: number;
         y: number;
     }
 
-    interface Node{
+    interface Vertex{
         letter: string;
-        neighbours: Position[];
-        height: number;
+        position: Position;
     }
 
+    interface Edge{
+        positionOne: Position;
+        positionTwo: Position;
+    }
+ 
     interface Graph{
-        nodes: Node[];
+        vertecies: Vertex[];
+        edges: Edge[];
     }
 
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
-
-    function getHeightValue(char: string){
-        return alphabet.indexOf(char);
-    }
-
-    function getNeighbour(graph: Graph, pos: Position){
-        let tmp = []; 
-    
-        const chunkSize = 83;
-        for (let i = 0; i < graph.nodes.length; i += chunkSize) {
-            const chunk = graph.nodes.slice(i, i + chunkSize);
-            tmp.push(chunk);
-        }
-        
-        return tmp[pos.y][pos.x];
-    }
-
-    let visitedPositions: Position[] = [];
-    function isVisited(pos: Position){
-        let visited = false;
-        for(let i = 0; i < visitedPositions.length; i++){
-            if(visitedPositions[i].x === pos.x && visitedPositions[i].y === pos.y){
-                visited = true;
-                break;
+    function getVertexFromPos(vertecies: Vertex[], pos: Position){
+        for(let i = 0; i < vertecies.length; i++){
+            if(vertecies[i].position.x === pos.x && vertecies[i].position.y === pos.y){
+                return vertecies[i];
             }
         }
-        return visited;
-    }
-
-    function traverse(graph: Graph, currentNode: Node, depth: number = 0): number[]{
-        let depthList = [];
-        console.log(currentNode);
-        
-        if(depth === 2){
-            return [];
-        }
-        if(currentNode.letter === "E"){
-            return [depth];
-        }
-
-        for(let i = 0; i < currentNode.neighbours.length; i++){
-            let heightDif = Math.abs(currentNode.height - getNeighbour(graph, currentNode.neighbours[i]).height);
-
-            if((heightDif === 0 || heightDif === 1) && !isVisited(currentNode.neighbours[i])){
-                visitedPositions.push(currentNode.neighbours[i]);
-                depthList.push(...traverse(graph, getNeighbour(graph, currentNode.neighbours[i]), depth + 1));
-            }
-        }
-
-        return depthList;
     }
 
     useEffect(() => {
@@ -90,46 +64,159 @@ function Dec12(){
             tmp.pop();
         }
 
-        let graph: Graph = {nodes: []};
+        let graph: Graph = {vertecies: [], edges: []};
+
         let startingNode = {x:0, y:0};
         let finishNode = {x:0, y:0};
+
 
         for(let i = 0; i < tmp.length; i++){
             let split = tmp[i].split("");
             for(let j = 0; j < split.length; j++){
-                let node: Node;
+                let vertex: Vertex = {letter: tmp[i][j], position: {x: j, y: i}};
                 if(tmp[i][j] === 'S'){
                     startingNode = {x: j, y: i};
-                    node = {height: getHeightValue('a'), neighbours: [], letter: tmp[i][j]};
                 }else if(tmp[i][j] === 'E'){
                     finishNode = {x: j, y: i};
-                    node = {height: getHeightValue('z'), neighbours: [], letter: tmp[i][j]};
-                }else{
-                    node = {height: getHeightValue(tmp[i][j]), neighbours: [], letter: tmp[i][j]};
-                }
-                
-                if((i - 1) >= 0){
-                    node.neighbours.push({x: j, y: i - 1});
                 }
 
+                graph.vertecies.push(vertex);
+
+                if((i - 1) >= 0){
+                    let edge:Edge = {positionOne: {x: j, y: i}, positionTwo: {x: j, y: i-1}};
+                    graph.edges.push(edge);
+                }   
+
                 if((i + 1) < tmp.length){
-                    node.neighbours.push({x: j, y: i + 1});
+                    let edge:Edge = {positionOne: {x: j, y: i}, positionTwo: {x: j, y: i+1}};
+                    graph.edges.push(edge)
                 }
 
                 if((j - 1) >= 0){
-                    node.neighbours.push({x: j - 1, y: i});
+                    let edge:Edge = {positionOne: {x: j, y: i}, positionTwo: {x: j-1, y: i}};
+                    graph.edges.push(edge)
                 }
 
                 if((j + 1) < split.length){
-                    node.neighbours.push({x: j + 1, y: i});
+                    let edge:Edge = {positionOne: {x: j, y: i}, positionTwo: {x: j+1, y: i}};
+                    graph.edges.push(edge)
                 }
-
-                graph.nodes.push(node);
             }
         }
 
-        visitedPositions.push(startingNode);
-        console.log(traverse(graph, getNeighbour(graph, startingNode)));     
+        for(let i = 0; i < graph.edges.length; i++){
+            for(let j = 0; j < graph.edges.length; j++){
+                if(graph.edges[i].positionOne.x === graph.edges[j].positionTwo.x && 
+                   graph.edges[i].positionOne.y === graph.edges[j].positionTwo.y &&
+                   graph.edges[i].positionTwo.x === graph.edges[j].positionOne.x &&
+                   graph.edges[i].positionTwo.y === graph.edges[j].positionOne.y){
+                    graph.edges.splice(j, 1);
+                }
+            }
+        }
+
+        let newEdges = [];
+        for(let i = 0; i < graph.edges.length; i++){
+            let vertexOne = getVertexFromPos(graph.vertecies, graph.edges[i].positionOne);
+            let vertexTwo = getVertexFromPos(graph.vertecies, graph.edges[i].positionOne);
+            if(vertexOne && vertexTwo){
+                if(Math.abs(getHeightValue(vertexOne.letter) - getHeightValue(vertexTwo.letter)) === 0){
+                    newEdges.push(graph.edges[i]);
+                }else if(Math.abs(getHeightValue(vertexOne.letter) - getHeightValue(vertexTwo.letter)) === 1){
+                    newEdges.push(graph.edges[i]);
+                }
+            }   
+        }
+
+        let prev: number[] | undefined[] = [];
+        for(let i = 0; i < graph.vertecies.length; i++) prev[i] = undefined;
+
+        let dist: number[] = [];
+        for(let i = 0; i < graph.vertecies.length; i++) dist[i] = Infinity;
+
+        let tmpVertecies: Vertex[] = [];
+        for(let i = 0; i < graph.vertecies.length; i++) tmpVertecies[i] = graph.vertecies[i];
+
+        function getNeighbours(pos: Position, vertecies: Vertex[], edges: Edge[]){
+            let rv = [];
+            for(let i = 0; i < edges.length; i++){
+                if(edges[i].positionOne.x === pos.x && edges[i].positionOne.y === pos.y){
+                    rv.push(getVertexFromPos(vertecies, {x: edges[i].positionTwo.x, y: edges[i].positionTwo.y}));
+                }
+
+                if(edges[i].positionTwo.x === pos.x && edges[i].positionTwo.y === pos.y){
+                    rv.push(getVertexFromPos(vertecies, {x: edges[i].positionOne.x, y: edges[i].positionOne.y}));
+                }
+            }
+
+            return rv;
+        }
+    
+        let finishIndex = 0;
+        for(let i = 0; i < graph.vertecies.length; i++){
+            if(graph.vertecies[i].letter === "S"){
+                dist[i] = 0;
+            }
+
+            if(graph.vertecies[i].letter === "E"){
+                finishIndex = i;
+            }
+        }
+
+        function getIndexOfPos(pos: Position | undefined){
+            if(!pos){
+                return -1;
+            }
+            for(let i = 0; i < graph.vertecies.length; i++){
+                if(graph.vertecies[i].position.x === pos.x && graph.vertecies[i].position.y === pos.y){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        function findLeastDist(vertecies: Vertex[]){
+            let least = undefined;
+            let leastIndex = undefined;
+            let leastIndexVertecies = undefined;
+            for(let i = 0; i < vertecies.length; i++){
+                let index = getIndexOfPos(vertecies[i].position);
+                if(least === undefined || index && dist[index] <= least){
+                    least = dist[index];
+                    leastIndex = index;
+                    leastIndexVertecies = i;
+                }
+            }
+            
+            return leastIndex ? {pos: graph.vertecies[leastIndex].position, distIndex: leastIndex, index: leastIndexVertecies} : undefined;
+        }
+
+
+        while(tmpVertecies.length > 0){
+            
+            let minDist = findLeastDist(tmpVertecies);
+            if(minDist === undefined || minDist.distIndex === undefined || minDist.index === undefined){
+                console.log(minDist);
+                break;
+            }
+        
+            let neighbours = getNeighbours(minDist.pos, graph.vertecies, newEdges);
+            tmpVertecies.splice(minDist.index, 1);
+            
+            for(let i = 0; i < neighbours.length; i++){
+                    let newDist = dist[minDist.distIndex] + 1;            
+                    let neighbour = getIndexOfPos(neighbours[i]?.position);
+                    if(newDist <= dist[neighbour]){
+                        dist[neighbour] = newDist;
+                        prev[neighbour] = minDist.index;
+                    }
+            }
+        }      
+        
+        console.log(dist);
+        
+
     }, [input]);
 
     return <MainCard title='Day 12: Hill Climbing Algorithm.'>                
