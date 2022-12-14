@@ -56,6 +56,10 @@ export default function Home() {
               <Link href="/dec13">
                 <li>✅Day 13: Distress Signal.</li>              
               </Link>
+
+              <Link href="/dec14">
+                <li>Day 14: Regolith Reservoir. (Work in progress...)</li>              
+              </Link>
             </ul>
         </MainCard>
   )
