@@ -60,6 +60,10 @@ export default function Home() {
               <Link href="/dec14">
                 <li>Day 14: Regolith Reservoir. (Work in progress...)</li>              
               </Link>
+
+              <Link href="/dec15">
+                <li>Day 15: Beacon Exclusion Zone. (Work in progress...)</li>              
+              </Link>
             </ul>
         </MainCard>
   )
