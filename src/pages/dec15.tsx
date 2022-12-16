@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
-import {v4 as uuidv4} from 'uuid';
 
 function Dec14(){
     const [input, setInput] = useState("");
