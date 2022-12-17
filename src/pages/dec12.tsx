@@ -104,117 +104,124 @@ function Dec12(){
             }
         }
 
-        for(let i = 0; i < graph.edges.length; i++){
-            for(let j = 0; j < graph.edges.length; j++){
-                if(graph.edges[i].positionOne.x === graph.edges[j].positionTwo.x && 
-                   graph.edges[i].positionOne.y === graph.edges[j].positionTwo.y &&
-                   graph.edges[i].positionTwo.x === graph.edges[j].positionOne.x &&
-                   graph.edges[i].positionTwo.y === graph.edges[j].positionOne.y){
-                    graph.edges.splice(j, 1);
+
+        function getDistFromPosition(dist: number[], postiion: Position){
+            for(let i = 0; i < graph.vertecies.length; i++){
+                if(graph.vertecies[i].position.x === postiion.x && graph.vertecies[i].position.y === postiion.y){
+                    return dist[i];
                 }
             }
+
+            throw 'Dist not found.';
         }
 
-        let newEdges = [];
-        for(let i = 0; i < graph.edges.length; i++){
-            let vertexOne = getVertexFromPos(graph.vertecies, graph.edges[i].positionOne);
-            let vertexTwo = getVertexFromPos(graph.vertecies, graph.edges[i].positionOne);
-            if(vertexOne && vertexTwo){
-                if(Math.abs(getHeightValue(vertexOne.letter) - getHeightValue(vertexTwo.letter)) === 0){
-                    newEdges.push(graph.edges[i]);
-                }else if(Math.abs(getHeightValue(vertexOne.letter) - getHeightValue(vertexTwo.letter)) === 1){
-                    newEdges.push(graph.edges[i]);
+
+        function getVertexWithLeastDist(arr: Vertex[], dist: number[]){
+            let leastPos = undefined;
+            let vertex = undefined;
+            for(let i = 0; i < arr.length; i++){
+                let tmpDist = getDistFromPosition(dist, arr[i].position);
+                if(leastPos === undefined || tmpDist < leastPos){
+                    leastPos = tmpDist;
+                    vertex = i;
                 }
-            }   
+            }
+
+            if(vertex === undefined){
+                throw "Could not find vertex.";
+            }
+
+            return vertex;
         }
 
-        let prev: number[] | undefined[] = [];
-        for(let i = 0; i < graph.vertecies.length; i++) prev[i] = undefined;
-
-        let dist: number[] = [];
-        for(let i = 0; i < graph.vertecies.length; i++) dist[i] = Infinity;
-
-        let tmpVertecies: Vertex[] = [];
-        for(let i = 0; i < graph.vertecies.length; i++) tmpVertecies[i] = graph.vertecies[i];
-
-        function getNeighbours(pos: Position, vertecies: Vertex[], edges: Edge[]){
-            let rv = [];
+        function getNeighbours(position: Position, arr: Vertex[], edges: Edge[]){
+            let neighbourPositions = [];
             for(let i = 0; i < edges.length; i++){
-                if(edges[i].positionOne.x === pos.x && edges[i].positionOne.y === pos.y){
-                    rv.push(getVertexFromPos(vertecies, {x: edges[i].positionTwo.x, y: edges[i].positionTwo.y}));
-                }
-
-                if(edges[i].positionTwo.x === pos.x && edges[i].positionTwo.y === pos.y){
-                    rv.push(getVertexFromPos(vertecies, {x: edges[i].positionOne.x, y: edges[i].positionOne.y}));
+                if(edges[i].positionOne.x === position.x && edges[i].positionOne.y === position.y){
+                    neighbourPositions.push(edges[i].positionTwo);
                 }
             }
 
-            return rv;
+            
+            
+
+            let indecies: number[] = [];
+            for(let i = 0; i < arr.length; i++){
+                for(let j = 0; j < neighbourPositions.length; j++){
+                    if(arr[i].position.x === neighbourPositions[j].x && arr[i].position.y === neighbourPositions[j].y){
+                        indecies.push(i);
+                    }
+                }
+            }
+
+
+
+            if(position.x === 0 && position.y === 0){
+                console.log(neighbourPositions);
+                console.log(indecies);
+            }
+            
+            
+
+            return indecies;
         }
     
+        function dijkstra(){
+            let tmpVertecies: Vertex[] = [];
+            let dist: number[] = [];
+            for(let i = 0; i < graph.vertecies.length; i++){
+                tmpVertecies.push(graph.vertecies[i]);
+                if(graph.vertecies[i].letter !== 'S'){
+                    dist[i] = Infinity;
+                }else{
+                    dist[i] = 0;
+                }
+            }
+
+            while(tmpVertecies.length > 0){
+                let vertexIndex = getVertexWithLeastDist(tmpVertecies, dist);
+                let vertex = tmpVertecies[vertexIndex];
+
+                tmpVertecies.splice(vertexIndex, 1);
+
+
+                let neighbours = getNeighbours(vertex.position, tmpVertecies, graph.edges);
+                if(vertex.position.x === 0 && vertex.position.y === 0){
+                    console.log(neighbours);
+                }
+                for(let i = 0; i < neighbours.length; i++){
+                    let alt = dist[vertexIndex] + 1;
+                    if(alt < dist[neighbours[i]]){
+                        dist[neighbours[i]] = alt;
+                    }
+                }
+            }
+
+            return dist;
+        }
+
+        let distances = dijkstra();
         let finishIndex = 0;
         for(let i = 0; i < graph.vertecies.length; i++){
-            if(graph.vertecies[i].letter === "S"){
-                dist[i] = 0;
-            }
-
             if(graph.vertecies[i].letter === "E"){
                 finishIndex = i;
-            }
-        }
-
-        function getIndexOfPos(pos: Position | undefined){
-            if(!pos){
-                return -1;
-            }
-            for(let i = 0; i < graph.vertecies.length; i++){
-                if(graph.vertecies[i].position.x === pos.x && graph.vertecies[i].position.y === pos.y){
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        function findLeastDist(vertecies: Vertex[]){
-            let least = undefined;
-            let leastIndex = undefined;
-            let leastIndexVertecies = undefined;
-            for(let i = 0; i < vertecies.length; i++){
-                let index = getIndexOfPos(vertecies[i].position);
-                if(least === undefined || index && dist[index] <= least){
-                    least = dist[index];
-                    leastIndex = index;
-                    leastIndexVertecies = i;
-                }
-            }
-            
-            return leastIndex ? {pos: graph.vertecies[leastIndex].position, distIndex: leastIndex, index: leastIndexVertecies} : undefined;
-        }
-
-
-        while(tmpVertecies.length > 0){
-            
-            let minDist = findLeastDist(tmpVertecies);
-            if(minDist === undefined || minDist.distIndex === undefined || minDist.index === undefined){
-                console.log(minDist);
                 break;
             }
+        }
+
+        console.log(distances[finishIndex]);
         
-            let neighbours = getNeighbours(minDist.pos, graph.vertecies, newEdges);
-            tmpVertecies.splice(minDist.index, 1);
-            
-            for(let i = 0; i < neighbours.length; i++){
-                    let newDist = dist[minDist.distIndex] + 1;            
-                    let neighbour = getIndexOfPos(neighbours[i]?.position);
-                    if(newDist <= dist[neighbour]){
-                        dist[neighbour] = newDist;
-                        prev[neighbour] = minDist.index;
-                    }
-            }
-        }      
         
-        console.log(dist);
+
+
+        
+
+       
+
+      
+
+
+       
         
 
     }, [input]);
