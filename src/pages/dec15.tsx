@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
 
-function Dec14(){
+function Dec15(){
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
     const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
@@ -184,4 +184,4 @@ function Dec14(){
     </MainCard>
 }
 
-export default Dec14;
+export default Dec15;

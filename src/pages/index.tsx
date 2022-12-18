@@ -68,6 +68,14 @@ export default function Home() {
               <Link href="/dec16">
                 <li>Day 16: Proboscidea Volcanium. (Work in progress...)</li>              
               </Link>
+
+              <Link href="/dec17">
+                <li>Day 17: Pyroclastic Flow. (Work in progress...)</li>              
+              </Link>
+
+              <Link href="/dec18">
+                <li>Day 18: Boiling Boulders. (Work in progress...)</li>              
+              </Link>
             </ul>
         </MainCard>
   )

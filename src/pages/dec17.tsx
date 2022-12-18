@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import MainCard from '../components/MainCard';
 import InputArea from '../components/InputArea';
 
-function Dec16(){
+function Dec17(){
     const [input, setInput] = useState("");
     const [puzzleOneResult, setPuzzleOneResult] = useState(0);
     const [puzzleTwoResult, setPuzzleTwoResult] = useState(0);
@@ -28,7 +28,7 @@ function Dec16(){
     }, [input]);
 
 
-    return <MainCard title='Day 16: Proboscidea Volcanium.'>                
+    return <MainCard title='Day 17: Pyroclastic Flow.'>                
             <InputArea inputChange={(val: string) => {
                 setInput(val);
             }} />
@@ -40,4 +40,4 @@ function Dec16(){
     </MainCard>
 }
 
-export default Dec16;
+export default Dec17;
