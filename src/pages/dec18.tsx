@@ -187,8 +187,9 @@ function Dec18(){
         }
 
  
-
-        console.log(result - (trappedAir(map).length*6));
+        let trappedAirCubes = trappedAir(map);
+        
+        console.log(result - (trappedAirCubes.length*6));
         
         setTimerTwo(`${(performance.now() - startTimer).toFixed(1)} ms.`);
         
